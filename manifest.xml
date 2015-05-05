@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<App uuid="2ff03f52-c91b-42c0-91e2-28cdc88a0f3">
+   <Name>Flickr Slideshow</Name>
+   <Author>Incomedia</Author>
+   <Version>4</Version>
+   <Category>Galleries</Category>
+   <Description l10n-id="general-description">Create a slideshow from a Flickr users' photostream.</Description>
+   <ShowPreview>True</ShowPreview>
+   <Parameters>
+      <Tab>
+         <Label>Graphics</Label>
+         <Description l10n-id="description">Set the Flickr username of the userof which you want to show the photos.</Description>
+         <ShowPreview>True</ShowPreview>
+         <Fields>
+            <Field type="text" id="username">
+               <Label l10n-id="username">Flickr username:</Label>
+               <UpdatesPreview>true</UpdatesPreview>
+            </Field>
+            <Field type="number" id="number">
+               <Label l10n-id="number">Number of slides:</Label>
+               <DefaultValue>30</DefaultValue>
+               <MinValue>2</MinValue>
+               <MaxValue>100</MaxValue>
+               <UpdatesPreview>true</UpdatesPreview>
+            </Field>
+            <Field type="number" id="seconds">
+               <Label l10n-id="seconds">Seconds per slide:</Label>
+               <DefaultValue>3</DefaultValue>
+               <MinValue>1</MinValue>
+               <MaxValue>60</MaxValue>
+               <UpdatesPreview>true</UpdatesPreview>
+            </Field>
+            <Field type="dropdown" id="theme">
+               <Label l10n-id="theme">Theme</Label>
+               <Options>
+                  <Option value="0" l10n-id="theme-dark">Dark</Option>
+                  <Option value="1" l10n-id="theme-light">Light</Option>
+               </Options>
+               <UpdatesPreview>true</UpdatesPreview>
+            </Field>
+            <Field type="dropdown" id="thumbnails">
+               <Label l10n-id="thumbnails">Thumbnails</Label>
+               <Options>
+                  <Option value="0" l10n-id="thumbnails-none">None</Option>
+                  <Option value="1" l10n-id="thumbnails-small">Small</Option>
+                  <Option value="2" l10n-id="thumbnails-large">Large</Option>
+               </Options>
+               <UpdatesPreview>true</UpdatesPreview>
+            </Field>
+            <Field type="dropdown" id="captions">
+               <Label l10n-id="captions">Captions</Label>
+               <Options>
+                  <Option value="0" l10n-id="captions-off">Off</Option>
+                  <Option value="1" l10n-id="captions-toggle">Toggle</Option>
+                  <Option value="on" l10n-id="captions-on">On</Option>
+               </Options>
+               <UpdatesPreview>true</UpdatesPreview>
+            </Field>
+            <Field type="dropdown" id="transition">
+               <Label l10n-id="transition">Transition</Label>
+               <Options>
+                  <Option value="0">Slide</Option>
+                  <Option value="1">Fade</Option>
+                  <Option value="2">Flash</Option>
+                  <Option value="3">Pulse</Option>
+                  <Option value="4">Fadeslide</Option>
+               </Options>
+               <UpdatesPreview>true</UpdatesPreview>
+            </Field>
+            <Field type="checkbox" id="background">
+               <Label l10n-id="background">Transparent background</Label>
+               <UpdatesPreview>true</UpdatesPreview>
+            </Field>
+            <Field type="checkbox" id="mouseclick">
+               <Label l10n-id="mouseclick">Mouse click to advance</Label>
+               <UpdatesPreview>true</UpdatesPreview>
+            </Field>
+         </Fields>
+      </Tab>
+   </Parameters>
+   <Hooks><![CDATA[
+      function IsEmpty() {
+         return parameters.username.value.length == 0;
+      }
+   ]]></Hooks>
+   <Output><![CDATA[
+      <?wsx5
+         var width = wsx5.mode == "uipreview" ? 400 : currentObject.width;
+         var height = wsx5.mode == "uipreview" ? 250 : width;
+         var user = parameters.username.value;
+         var theme = parameters.theme.value;
+
+         var url = '//flickrit.com/slideshowholder.php?height=' + height + '&width=' + width;
+            url += '&size=medium&userId=' + user;
+            url += '&theme=' + parameters.theme.value;
+            url += '&speed=' + parameters.seconds.value;
+            url += '&count=' + parameters.number.value;
+            url += '&thumbnails=' + parameters.thumbnails.value;
+            url += '&transition=' + parameters.transition.value;
+            url += '&layoutType=fixed&sort=0';
+            url += "&caption=" + parameters.captions.value;
+         if (parameters.mouseclick.checked) {
+            url += "&click=true";
+         }
+         if (parameters.background.checked) {
+            url += '&trans=1';
+         }
+      ?>
+      <iframe id='iframe' src='<?wsx5 document.write(url) ?>' scrolling='no' frameborder='0' width='<?wsx5 document.write(width) ?>' height='<?wsx5 document.write(height + 10) ?>'></iframe>
+   ]]></Output>
+</App>
